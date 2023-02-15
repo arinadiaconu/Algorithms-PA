@@ -1,0 +1,169 @@
+DIACONU ARINA-IOANA     322CB
+
+            README - PA
+               TEMA 1
+
+   Mentiune importanta - pentru implementarea tuturor problemelor am
+utilizat scheletul de rezolvare al unui task din laborator, ce 
+apeleaza in functia main o functie dintr-o clasa in care sunt apelate
+3 functii principale:
+   - "read_input()" - functia ce realizeaza citirea datelor din fisierul
+de intrare;
+   - "get_result()" - functia ce calculeaza rezultatul dorit fie direct,
+fie prin apelarea altor functii ajutatoare in obtinerea solutiei;
+   - "print_output()" - functia ce realizeaza scrierea rezultatului sau
+a datelor obtinute ca rezultate in fisierul de iesire.
+
+   Problema 1 - Gigel si Tabelele Walsh
+
+   Pentru implementarea solutiei acestei probleme, am plecat de la
+scheletul task-ului Z-parcurgere din solutia laboratorului 1. Problema
+este rezolvata cu Divide et Impera, intrucat fiecare tabela walsh este
+alcatuita din alte 4 tabele walsh. Solutia este data de cate ori
+perechea de x si y data ca input se afla in patratul din dreapta jos
+al tabelei walsh, apelata recursiv precum in algoritmul de 
+Z-parcurgere. In cazul in care acest numar este par, atunci rezultatul
+va fi egal cu 0, deoarece de fiecare data cand un numar n se afla in
+patratul din dreapta jos, el devine n negat. N negat de un numar par
+de ori este tot n. In cazul in care numarul intors de functia de
+Z-parcurgere este impar, rezultatul va fi mereu 0 negat, adica 1.
+
+   Functiile utilizate:
+      - "in_rectangle" - aceasta functie primeste perechea de x si y
+data ca input si inca 2 astfel de perechi si verifica daca x se afla
+intre cei doi x primiti, respectiv ca y se afla intre cei 2 y. Altfel
+spus, verifica daca perechea de x si y se afla inauntrul dreptunghiului
+format din celelalte 2 perechi de x si y. Aceasta functie se regaseste
+in solutia laboratoruli 1, facand parte din Z-parcurgere.
+
+   - "recursive_search" - aceasta functie implementeaza recursiv
+algoritmul de Z-parcurgere, in care se numara de cate ori perechea de
+x si y se gaseste in patratul din dreapta jos al tabelei walsh. Functia
+intoarce acest numar.
+
+   - "solve_recursively" - aceasta functie apeleaza functia precedenta
+cu parametrii corespunzatori pentru fiecare pereche de x si y primita
+ca parametru si intoarce rezultatul primit de la functia de cautare in
+tabela walsh.
+
+   - "get_result()" - aceasta functie este apelata dupa fiecare citire
+a unei perechi de x si y si apeleaza functia precedenta asteptand
+rezultatul. Daca acesta este par, retine intr-un vector rezultatul 0,
+iar daca este impar retine rezultatul 1.
+
+   - "print_output()" - scrie in fisierul de iesire numerele salvate in
+vectorul cu solutii.
+
+   Complexitate: T = O(log(n))
+
+   Problema 2 - Gigel si Cuvintele Criptate
+
+   Pentru a impelmenta solutia acestei probleme, iterez prin fiecare
+litera din alfabet si pentru fiecare construiesc un vector de frecventa
+in care retin numarul literelor care fac match cu litera cautata, din
+care scad numarul literelor care nu fac match cu acea litera. Sortez
+descrescator acest vector si numar cuvintele ce concatenate au aceasta
+frecventa mai mare ca 0, ceea ce inseamna ca acel caracter se gaseste
+de mai mult de jumatate din lungimea cuvantului si, deci, este dominant.
+Retin la fiecare pas maximul de cuvinte concatenate si in final
+returnez maximul global.
+
+   Functiile utilizate:
+      - "frequency_for_a_word" - primeste caracterul pentru care se
+calculeaza frecventa si un cuvant. Itereaza prin toate literele din
+acel cuvant si calculeaza frecventa prin a incrementa numarul intors
+in cazul in care acea litera este egala cu caracterul primit ca
+parametru si prin a il decrementa in cazul in care nu este egalitate
+intre caracterul curent si cel primit.
+
+      - "frequency_of_each_letter" - contruieste vectorul de frecventa
+pentru fiecare caracter primit ca parametru prin apelarea functiei
+precedente pentru fiecare string din vectorul de cuvinte primit ca
+input.
+
+      - "max_number_of_strings_for_each_letter" - primeste un vector
+sortat de frecventa si calculeaza numarul maxim de cuvinte ce
+concatenate au un caracter dominant si intoarce acest numar. Practic
+aduna la fiecare pas frecventa cate unui cuvant si verifica daca este
+respectata conditia de existenta a unui caracter dominant sau, altfel
+spus, verifica ca suma frecventelor sa fie mereu mai mare ca 0.
+
+      - "max_number_of_strings()" - itereaza prin fiecare litera a
+alfabetului si pentru fiecare litera apeleaza functia 
+"frequency_of_each_letter" pentru a calcula vectorul de frecventa,
+il sorteaza si apeleaza functia "max_number_of_strings_for_each_letter"
+pentru a calcula maximul de cuvinte ce pot fi concatenate pentru acea
+litera, retinand maximul global la fiecare pas, pe care il si intoarce
+dupa ce termina de itearat prin toate literele din alfabet.
+
+   Complexitate: T = O(n * log(n))
+
+   Problema 3 - Gigel si Prinel
+
+   Pentru implementarea acestei solutii, construiesc prima data vectorul
+de operatii pentru a ajunge la fiecare target din vectorul de targeturi
+primit ca input. Pentru a construi acest vector, folosesc programare
+dinamica, astfel: construiesc un vector cu maxim targetul cel mai mare
+din vectorul de targeturi elemente, iar dp[i] = 1 + min(dp[i - div1],
+dp[i - div2], ...), unde div1, div2, ... sunt toti divizorii acelui
+element i, in afara de el insusi. Cazurile de baza sunt dp[1] = 0 si
+dp[2] = 1. In acest moment am un vector cu toate numerele de operatii
+necesare construirii oricarui target din vectorul dat ca input si pentru
+a construi vectorul de nr de operatii, doar apelez dp[target[i]].
+In final, pentru a ajunge la numarul maxim de puncte pentru un anumit
+numar de operatii dat, aplic algoritmul rucsac, facut la laborator, dar
+utilizez varianta discreta a acestuia, adica varianta ce foloseste doar
+un vector, intrucat doresc sa optimizez timpul de rulare al programului.
+
+   Functii utilizate:
+      - "my_compare" - functia ce compara minimul curent cu un element
+de tipul dp[element - divizor] si intoarce mereu minimul dintre ele.
+
+      - "my_min" - functia ce itereaza prin toti divizorii unui element
+si retine minimul dintre elementele de tipul dp[element - divizor] prin
+apelarea functiei precedente.
+
+    - "number_of_operations()" - construieste vectorul dp cu regula
+mentionata mai sus si dupa aceea construieste vectorul de nr de
+operatii pe baza vectorului dp.
+
+   - "most_points()" - algoritmul probemei rucsac studiata la laborator
+si aplicata pe vectorul de nr de operatii si pe cel care retine punctele,
+dar am utilizat varianta acestuia ce foloseste doar un vector pentru
+optimizarea timpului de rulare.
+
+   Complexitate: T = O(n * k)
+
+   Problema 4 - Gigel si Cheia de la Portofel
+
+   Pentru implementarea acestei solutii, construiesc o matrice folosind
+programare dinamica ce pentru un element dp[i][j] retine de cate ori
+apar j caractere din substring in i caractere din cheie.
+   Recurenta este urmatoarea:
+      - cazurile de baza - pe prima linie voi pune doar 0, iar primul
+element din matrice este egal cu 1;
+      - prima coloana se completeaza pe rand cu elementul de deasupra
+in cazul in care caracterul din cheie este o litera, iar in cazul in
+care acel caracter este '?', se completeaza cu elementul de deasupra
+inmultit cu numarul de caractere distincte din substring, deoarece pe
+acea pozitie poate fi orice litera din substring.
+      - voi imparti solutia in doua cazuri:
+         - caracterul din cheie este '?' - atunci elementul curent va
+fi egal cu elementul de deasupra inmultit cu numarul de caractere
+distincte din substring, la care adun elementul de pe diagonala din
+stanga sus (dp[i - 1][j - 1]).
+         - caracterul este o litera si in acest caz verific daca nu este
+egal cu cel din substring, iar elementul din matrice va fi egal cu cel
+de deasupra. In caz de egalitate, adun elementul de deasupra din matrice
+cu cel de pe diagonala (dp[i - 1][j - 1]).
+
+   Functii utilizate:
+      - "count_substrings()" - functia in care implementez recurenta
+mentionata mai sus.
+
+      - "count_distinct_characters" - functia in care calculez numarul
+de litere distincte dintr-un string prin introducerea fiecarui caracter
+intr-un set, intrucat acesta retine doar elemente unice. La final
+functia intoarce numarul de elemente din set.
+
+   Complexitate: T = O(n * l)
